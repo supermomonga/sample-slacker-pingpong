@@ -1,7 +1,8 @@
 (ns sample-slacker-pingpong.core
   (:require [clojure.string :refer [lower-case]]
             [slacker.client :refer [emit! handle with-stacktrace-log]]
-            [clojure.tools.logging :as log]))
+            [clojure.tools.logging :as log]
+            [environ.core :refer [env]]))
 
 (defn ping-pong
   "ping-pong"
@@ -12,6 +13,8 @@
 (defn -main
   [& args]
   (handle :message ping-pong)
-  (if-let [api-token (System/getenv "SLACK_API_TOKEN")]
-    (emit! :slacker.client/connect-bot )
+  (if-let [api-token (env :slack-api-token)]
+    (do
+      (log/info (str "API TOKEN : " api-token))
+      (emit! :slacker.client/connect-bot ))
     (log/error "You need to set environment variable `SLACK_API_TOKEN`.")))
