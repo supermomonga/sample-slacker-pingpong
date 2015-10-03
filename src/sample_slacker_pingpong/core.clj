@@ -16,5 +16,5 @@
   (if-let [api-token (env :slack-api-token)]
     (do
       (log/info (str "API TOKEN : " api-token))
-      (emit! :slacker.client/connect-bot ))
+      (emit! :slacker.client/connect-bot api-token))
     (log/error "You need to set environment variable `SLACK_API_TOKEN`.")))
