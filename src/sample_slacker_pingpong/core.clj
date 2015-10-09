@@ -6,13 +6,18 @@
 
 (defn print-args
   "echo argument"
-  [& args]
-  (println (str "args: "
+  [type & args]
+  (println (str type
+                " args: "
                 (if (nil? args) "nil" args))))
 
 (defn -main
   [& args]
-  (handle :message print-args)
+  (handle :hello (partial print-args "hello"))
+  (handle :message (partial print-args "message"))
+  (handle :user-typng (partial print-args "user-typing"))
+  (handle :pin-added (partial print-args "pin-added"))
+  (handle :pin-removed (partial print-args "pin-removed"))
   (if-let [api-token (env :slack-api-token)]
     (do
       (log/info "API token found.")
