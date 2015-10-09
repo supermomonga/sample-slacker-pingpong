@@ -4,18 +4,18 @@
             [clojure.tools.logging :as log]
             [environ.core :refer [env]]))
 
-(defn ping-pong
-  "ping-pong"
-  [{:keys [channel text]}]
-  (when (= text "ping")
-    (emit! :slacker.client/send-message channel "pong")))
+(defn print-args
+  "echo argument"
+  [& args]
+  (println (str "args: "
+                (if (nil? args) "nil" args))))
 
 (defn -main
   [& args]
-  (handle :message ping-pong)
+  (handle :message print-args)
   (if-let [api-token (env :slack-api-token)]
     (do
-      (log/info (str "API TOKEN : " api-token))
+      (log/info "API token found.")
       (emit! :slacker.client/connect-bot api-token)
       (await! :slacker.client/bot-disconnected))
     (log/error "You need to set environment variable `SLACK_API_TOKEN`.")))
